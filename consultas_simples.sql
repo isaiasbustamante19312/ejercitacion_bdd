@@ -79,6 +79,38 @@ ORDER BY P.fecha_pedido DESC;
 
 -- ejercicio 10
 
+SELECT E.*
+FROM empleados E
+WHERE E.id_jefe IS NULL;
+
+-- ejercicio 11
+
+SELECT C.*
+FROM clientes C
+WHERE C.id_vendedor IS NOT NULL;
+
+-- ejercicio 12
+SELECT 
+	C.id,
+	C.nombre,
+	C.direccion
+FROM clientes C
+WHERE 
+	C.pais = 'USA'
+	AND C.id_vendedor = 11
+ORDER BY nombre DESC;
+
+-- ejercicio 13
+
+SELECT 
+	E.nombre,
+	E.apellido,
+	E.fecha_ingreso
+FROM empleados E
+WHERE E.fecha_ingreso
+	BETWEEN CONVERT(DATE,'09-05-1991', 103)
+		AND CONVERT(DATE, '17-06-1991', 103);
+
 
 SELECT *
 FROM item
