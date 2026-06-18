@@ -93,4 +93,6 @@ FROM inventario I
 	JOIN almacenes A
 		ON I.id_almacenes = A.id
 WHERE A.pais = 'Brasil'
+	/*si necesito comparar deber ser el mismo tipo de dato, 
+	por eso convierto cant_en_stock a float*/
 	AND CONVERT(float, I.cant_en_stock) >= (I.max_en_stock * 0.90);
