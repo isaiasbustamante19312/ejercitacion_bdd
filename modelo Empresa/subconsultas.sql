@@ -194,7 +194,7 @@ HAVING COUNT(DISTINCT I.id_almacenes) >= 5;
 -- ejercicio 8
 SELECT
 	C.nombre,
-	COUNT(DISTINCT P.id) AS "pedido"
+	COUNT(P.id) AS "pedidos"
 FROM pedido P
 	JOIN clientes C
 		ON P.id_cliente = C.id
@@ -205,10 +205,66 @@ WHERE P.id IN (
 	HAVING COUNT(DISTINCT I.item_id) > 6
 )
 GROUP BY C.nombre
-ORDER BY "pedido"
+ORDER BY "pedidos";
+
+-- ejercicio 9
+
+SELECT 
+	C.id_region AS "Nro.Reg",
+	R.name AS "Nombre",
+	C.nombre AS "Cliente",
+	COUNT(P.id) AS "Cant.Ped."
+FROM clientes C
+	JOIN region R
+		ON C.id_region = R.id
+	JOIN pedido P
+		ON P.id_cliente = C.id
+GROUP BY 
+	C.id_region,
+	R.name,
+	C.nombre
+HAVING COUNT(P.id) IN (
+	SELECT TOP 1 COUNT(P2.id)  -- con el TOP 1 recorto el resultado mas alto
+	FROM pedido P2 
+		JOIN clientes C2
+			ON P2.id_cliente = C2.id
+	WHERE C2.id_region = C.id_region
+	GROUP BY C2.id
+	ORDER BY COUNT(P2.id) DESC  -- Ordeno de manera inversa para que el mayor esa el resultado mas alto
+)
 ;
 
+-- CONSULTA AVANZADA 
 
-SELECT *
-FROM pedido;
+SELECT
+	Em.id,
+	Em.apellido,
+	Em.nombre AS empleado,
+	Em.salario,
+	D.id AS id_departamento,
+	D.nombre AS departamento
+FROM empleados Em
+	JOIN depto D
+		ON Em.depto_id = D.id
+WHERE Em.salario <= ALL (
+	SELECT Em2.salario
+	FROM empleados Em2
+	WHERE Em2.depto_id = D.id
+);
+
+SELECT
+	Em.id,
+	Em.apellido,
+	Em.nombre AS empleado,
+	Em.salario,
+	D.id,
+	D.nombre AS departamento -- Recordá agregar el nombre que pide la consigna
+FROM empleados Em
+	JOIN depto D
+		ON Em.depto_id = D.id
+WHERE Em.salario = (
+	SELECT MIN(Em2.salario)
+	FROM empleados Em2
+	WHERE Em2.depto_id = D.id -- Correlación por departamento
+);
 
